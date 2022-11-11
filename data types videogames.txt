@@ -1,0 +1,59 @@
+Companies:
+
+PK
+nome: string, varchar 100, required
+nazione: string, varchar 50, required
+p.iva: tinyint (11), required
+città: string, varchar 50, required
+
+Videogames:
+
+PK
+nome: string, varchar 70, required
+trama: text, nullable
+data_di_rilascio: date, required
+
+
+Tournaments:
+
+PK
+nome: string, varchar 70, required
+anno: year, required
+città: string, varchar 50, required
+
+Reviews:
+
+PK
+rating: decimal(2,1) required
+
+
+Players:
+
+PK
+nome: string, varchar 50, required
+cognome: string, varchar 50, required
+nickname: string, varchar 30, required
+città: string, varchar 50, required
+
+Categories:
+
+PK
+nome: string, varchar 50, required
+
+
+Classifications
+
+PK
+nome: string, varchar 50, required
+
+
+Prizes
+
+PK
+nome: string, varchar 50, required
+
+
+Platforms:
+
+PK
+nome: string, varchar 50, required
