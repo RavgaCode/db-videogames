@@ -58,17 +58,32 @@ where software_house_id = 1 AND year(release_date) = 2018
 --QUERY CON GROUPBY
 
 --1- Contare quante software house ci sono per ogni paese (3)
-
+select country, count(id) as companies_for_country
+from software_houses
+group by country
 --2- Contare quante recensioni ha ricevuto ogni videogioco (del videogioco vogliamo solo l'ID) (500)
-
+select videogame_id, count(id) as number_of_reviews_per_game
+from reviews
+group by videogame_id
 --3- Contare quanti videogiochi hanno ciascuna classificazione PEGI (della classificazione PEGI vogliamo solo l'ID) (13)
-
+select pegi_label_id, count(videogame_id) as number_of_games_per_pegi
+from pegi_label_videogame
+group by pegi_label_id
+order by pegi_label_id asc
 --4- Mostrare il numero di videogiochi rilasciati ogni anno (11)
-
+select year(release_date), count(id) as number_of_games_per_year
+from videogames
+group by year(release_date)
 --5- Contare quanti videogiochi sono disponbiili per ciascun device (del device vogliamo solo l'ID) (7)
-
+select device_id, count(videogame_id) as number_of_games_per_device
+from device_videogame
+group by device_id
+order by device_id asc
 --6- Ordinare i videogame in base alla media delle recensioni (del videogioco vogliamo solo l'ID) (500)
-
+select videogame_id as videogame_id, avg(rating) as average_rating
+from reviews
+group by videogame_id
+order by avg(rating) asc
 --QUERY CON JOIN
 
 --1- Selezionare i dati di tutti giocatori che hanno scritto almeno una recensione, mostrandoli una sola volta (996)
