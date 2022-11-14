@@ -183,9 +183,40 @@ where tournaments.year = 2019 and award_videogame.year = 2018 and awards.name = 
 --*********** BONUS ***********
 
 --10- Selezionare i dati della prima software house che ha rilasciato un gioco, assieme ai dati del gioco stesso (software house id : 5)
+select top 1 software_houses.id, software_houses.name, videogames.id, videogames.name as videogame_name, videogames.release_date as release_date
+from software_houses
+inner join videogames
+on videogames.software_house_id = software_houses.id
+order by videogames.release_date asc
 
 --11- Selezionare i dati del videogame (id, name, release_date, totale recensioni) con più recensioni (videogame id : 398)
-
+select top 1 videogame_id, count(id) as number_of_reviews_per_game
+from reviews
+group by videogame_id
+order by count(reviews.id) desc
 --12- Selezionare la software house che ha vinto più premi tra il 2015 e il 2016 (software house id : 1)
+select top 1 software_houses.id as software_house_id, count(award_id) as number_of_awards
+from software_houses
+inner join videogames
+on videogames.software_house_id = software_houses.id
+inner join award_videogame
+on award_videogame.videogame_id = videogames.id
+inner join awards
+on awards.id = award_videogame.award_id
+where award_videogame.year = 2015 or award_videogame.year =2016
+group by software_houses.id
+order by count(award_id) desc
+
 
 --13- Selezionare le categorie dei videogame i quali hanno una media recensioni inferiore a 1.5 (10)
+select categories.id, avg(rating)
+from categories
+inner join category_videogame
+on categories.id = category_videogame.category_id
+inner join videogames
+on videogames.id = category_videogame.videogame_id
+inner join reviews
+on reviews.videogame_id = videogames.id
+
+group by categories.id
+order by avg(rating) asc
