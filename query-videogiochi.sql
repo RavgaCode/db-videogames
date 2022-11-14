@@ -87,23 +87,98 @@ order by avg(rating) asc
 --QUERY CON JOIN
 
 --1- Selezionare i dati di tutti giocatori che hanno scritto almeno una recensione, mostrandoli una sola volta (996)
+select distinct players.id, players.name, players.lastname
+from players
+inner join reviews
+on players.id = reviews.player_id
 
 --2- Sezionare tutti i videogame dei tornei tenuti nel 2016, mostrandoli una sola volta (226)
 
+select distinct videogames.id, videogames.name
+from videogames
+inner join tournament_videogame
+on videogames.id = tournament_videogame.videogame_id
+inner join tournaments
+on tournaments.id =  tournament_videogame.tournament_id
+where tournaments.year = 2016
+
 --3- Mostrare le categorie di ogni videogioco (1718)
-
+select distinct videogames.id, videogames.name, categories.name
+from videogames
+inner join category_videogame
+on videogames.id = category_videogame.videogame_id
+inner join categories
+on categories.id = category_videogame.category_id
 --4- Selezionare i dati di tutte le software house che hanno rilasciato almeno un gioco dopo il 2020, mostrandoli una sola volta (6)
-
+select distinct software_houses.name as company_name
+from software_houses
+inner join videogames
+on videogames.software_house_id = software_houses.id
+where year(videogames.release_date) between 2020 and 2022
 --5- Selezionare i premi ricevuti da ogni software house per i videogiochi che ha prodotto (55)
+select  software_houses.name as company_name, awards.name as award_name
+from software_houses
+inner join videogames
+on videogames.software_house_id = software_houses.id
+inner join award_videogame
+on award_videogame.videogame_id = videogames.id
+inner join awards
+on awards.id = award_videogame.award_id
+
 
 --6- Selezionare categorie e classificazioni PEGI dei videogiochi che hanno ricevuto recensioni da 4 e 5 stelle, mostrandole una sola volta (3363)
+select distinct categories.id as category_id, categories.name, pegi_labels.id, pegi_labels.name
+from categories
+inner join category_videogame
+on category_videogame.category_id = categories.id
+inner join pegi_label_videogame
+on pegi_label_videogame.videogame_id = category_videogame.videogame_id
+inner join pegi_labels
+on pegi_labels.id = pegi_label_videogame.pegi_label_id
+inner join reviews
+on reviews.videogame_id = category_videogame.videogame_id
+where reviews.rating between 4 and 5
+
 
 --7- Selezionare quali giochi erano presenti nei tornei nei quali hanno partecipato i giocatori il cui nome inizia per 'S' (474)
-
+select distinct  videogames.id, videogames.name
+from videogames
+inner join tournament_videogame
+on tournament_videogame.videogame_id = videogames.id
+inner join player_tournament
+on player_tournament.tournament_id = tournament_videogame.tournament_id
+inner join players
+on players.id = player_tournament.player_id
+where players.name like 'S%'
 --8- Selezionare le città in cui è stato giocato il gioco dell'anno del 2018 (36)
+select distinct tournaments.id, tournaments.name, tournaments.city
+from tournaments
+inner join tournament_videogame
+on tournament_videogame.tournament_id = tournaments.id
+inner join videogames
+on videogames.id = tournament_videogame.videogame_id
+inner join award_videogame
+on award_videogame.videogame_id = videogames.id
+inner join awards
+on awards.id = award_videogame.award_id
+where awards.name = 'Gioco dell''anno' and award_videogame.year = 2018
+
+
 
 --9- Selezionare i giocatori che hanno giocato al gioco più atteso del 2018 in un torneo del 2019 (3306)
-
+select  players.id, players.name as player_name, players.lastname as player_last_name
+from players
+inner join player_tournament
+on player_tournament.player_id = players.id
+inner join tournaments
+on tournaments.id = player_tournament.tournament_id
+inner join tournament_videogame
+on tournament_videogame.tournament_id = tournaments.id
+inner join award_videogame
+on award_videogame.videogame_id = tournament_videogame.videogame_id
+inner join awards
+on awards.id = award_videogame.award_id
+where tournaments.year = 2019 and award_videogame.year = 2018 and awards.name = 'Gioco più atteso'
 
 --*********** BONUS ***********
 
